@@ -198,7 +198,7 @@ public class Robot extends TimedRobot {
       //Default to off
       m_cargoIntakeCase = 0;
 
-      if(rightStick.getRawAxis(1)>.2){
+      if(Math.abs(rightStick.getRawAxis(1))>.2){
         m_cargoIntakeCase = 1;
         m_intake_OpenLoop_Power = rightStick.getRawAxis(1);
       }
