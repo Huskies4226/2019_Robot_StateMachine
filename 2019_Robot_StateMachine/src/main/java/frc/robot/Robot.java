@@ -13,12 +13,14 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -40,6 +42,7 @@ public class Robot extends TimedRobot {
   Spark motor_Intake;
   WPI_TalonSRX motor_Elevator;
   Encoder Encoder1_isUsedForWhat;
+  private DoubleSolenoid shifter;
 
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
@@ -74,6 +77,8 @@ public class Robot extends TimedRobot {
     rightStick=new Joystick(1);
     button1= new JoystickButton(leftStick, 2);
     Encoder1_isUsedForWhat=new Encoder(0,1,false);
+    shifter = new DoubleSolenoid(0, 0, 1);
+
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
@@ -191,6 +196,19 @@ public class Robot extends TimedRobot {
 
       }
 
+      /**
+       * DriveTrain Shifter
+       */
+
+       if(leftStick.getRawButtonPressed(1)){
+        myDrive_Shift_High();
+       }
+
+       if(leftStick.getRawButtonPressed(3)){
+        myDrive_Shift_Low();
+       }
+
+
       /*********************************************************** */
       // Intake Case Statment
       /*********************************************************** */
@@ -273,6 +291,14 @@ public class Robot extends TimedRobot {
    */
   private void myDrive(double leftCommand, double rightCommand){
     drivetrain.tankDrive(leftCommand,rightCommand,true);
+  }
+
+  private void myDrive_Shift_High(){
+    shifter.set(Value.kForward);
+  }
+
+  private void myDrive_Shift_Low(){
+    shifter.set(Value.kReverse);
   }
 
   /**
